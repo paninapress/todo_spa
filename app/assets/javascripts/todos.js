@@ -9,28 +9,28 @@ $(function(){
         this.temp = HandlebarsTemplates[this.tempName];
 
         return this;
-    };
+      };
 
     App.setTarget = function(sel){
         this.target =  sel;
         this.$target = $(sel);
         return this;
-    };
+      };
     
     
     App.make = function(item){
         this.$el = $(this.temp(item));
         return this;
-    };
+      };
     
     App.append = function(){
         this.$target.append(this.$el);
         return this;
-    };
+      };
 
     App.use = function(targetSel, tempSel){
         return this.setTarget(targetSel).setTemp(tempSel);
-     };
+      };
     App.render = function(item){
       this.make(item).append();
       return this;
@@ -39,7 +39,7 @@ $(function(){
     App.doThis = function(fn){
         fn.apply(App);
         return this;
-     };
+      };
 
     App.urls = {
       index : { path : '/todos.json', method : 'get' },
@@ -47,7 +47,7 @@ $(function(){
 
       // An id must be added to the todos path
       update : { path : '/todos/', method : 'patch' },
-      destroy : { path : '/todos/', method : 'delete' } 
+      destroy : { path : '/todos/', method : 'delete' }
     };
     
     App.saveItem = function(item, callback){
@@ -67,30 +67,30 @@ $(function(){
 
     App.updateItem = function(item, callback){
       var data = { todo : item };
-      $.ajax({ url : this.urls.update.path,
-               type : this.urls.patch.method,
+      $.ajax({ url : this.urls.update.path+item.id,
+               type : this.urls.update.method,
                data : data}).done(callback);
       return this;
     };
 
     App.deleteItem = function(item, callback){
       var data = { todo : item };
-      $.ajax({ url : this.urls.destroy.path,
-               type : this.urls.delete.method,
+      $.ajax({ url : this.urls.destroy.path+item,
+               type : this.urls.destroy.method,
                data : data}).done(callback);
       return this;
     };
     
-   	App.models = todos;
+    App.models = todos;
 
     App.findModel = function(id){
       var model;
       $.each(this.models, function(index, item){
           if(item.id === id){
-              console.log("found",item);
-             model = item;
+            console.log("found",item);
+            model = item;
           }
-      });
+        });
       console.log(model);
       return model;
     };
@@ -103,53 +103,53 @@ $(function(){
    
     // Eventhandler for adding todos
     App.doThis(function(){
-       var _this = this;
+        var _this = this;
       
-       $("#addTodo").on("submit", function(event){
+        $("#addTodo").on("submit", function(event){
         event.preventDefault();
         
-        var newTodo = {completed: false};
-        newTodo.title = $("#todo_title").val();
-        _this.saveItem(newTodo, function(data){
+          var newTodo = {completed: false};
+          newTodo.title = $("#todo_title").val();
+          _this.saveItem(newTodo, function(data){
             _this.models.push(data);
             _this.render(data);
-         });
-        this.reset();
+          });
+          this.reset();
+        });
       });
-    });
 
 
     // Eventhandler for changing todos
     App.doThis(function(){
-       var _this = this;
+        var _this = this;
       
       // event for CLICK CHECKBOX
-      $("#todos").on("click", ".todo", function(event){
-        var id = Number(this.dataset.id);
-        if(event.target.name === "completed"){
-          var view = this;
-          var todo =  _this.findModel(id);
-          console.log(todo)
-          todo.completed = !todo.completed;
+        $("#todos").on("click", ".todo", function(event){
+          var id = Number(this.dataset.id);
+          if(event.target.name === "completed"){
+            var view = this;
+            var todo =  _this.findModel(id);
+            console.log(todo);
+            todo.completed = !todo.completed;
 
           // UPDATE ITEM
-          _this.updateItem(todo, function(){
-            $(view).toggleClass("done-true");
-          });
-        }
+            _this.updateItem(todo, function(){
+              $(view).toggleClass("done-true");
+            });
+          }
 
-        if(event.target.id === "removeTodo"){
-          var view = this;
-          var todo =  _this.findModel(id);
+          if(event.target.id === "removeTodo"){
+            var view = this;
+            var todo =  _this.findModel(id);
           // DELETE ITEM
-          _this.deleteItem(id, function(){
-            _this.removeModel(todo);
-            console.log(_this.models);
-            $(view).remove();
-          });
-        }
+            _this.deleteItem(id, function(){
+              _this.removeModel(todo);
+              console.log(_this.models);
+              $(view).remove();
+            });
+          }
+        });
       });
-    });
 
     App.doThis(function() {
       var _this = this;
