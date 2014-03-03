@@ -21,7 +21,7 @@ class TodosController < ApplicationController
     todo.destroy
 
     respond_to do |f|
-      f.json { render json: todo, only: [:id, :title, :completed]}
+      f.json { render json: {}, only: [:id, :title, :completed]}
     end
   end
 
