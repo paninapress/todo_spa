@@ -1,10 +1,9 @@
-<div class="todo done-{{completed}}" data-id="{{id}}" >
+
   <label>
   <input id="todo_completed" 
          type="checkbox" 
-         {{#if completed}} checked {{/if}} 
-         name="completed"> 
+         data-id="{{id}}"> 
   {{title}}
   </label>
   <button id="removeTodo">delete</button>
-</div>
+
